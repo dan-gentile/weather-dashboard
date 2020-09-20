@@ -5,7 +5,7 @@ var storedCities = []
 // click event on search button to add cities to array and start the get info process
 $('#btn').click(function (e) {
     e.preventDefault();
-    var city = $('#city').val().trim();
+    var city = $('#city').val().replace(/\s*,\s*/g, ",").split(',');
     cities.unshift(city);
     // running functions
     clearCells();
@@ -15,7 +15,7 @@ $('#btn').click(function (e) {
 
 function displayCurrentWeather() {
     var currentCity = cities[0];
-    var queryURL = `https://api.openweathermap.org/data/2.5/weather?q=${currentCity}&appid=ece093d755e1ee215e90b7366ec41a32`
+    var queryURL = `https://api.openweathermap.org/data/2.5/weather?q=${currentCity},US&appid=ece093d755e1ee215e90b7366ec41a32`
 
     $.ajax({
         url: queryURL,
@@ -31,6 +31,7 @@ function displayCurrentWeather() {
 
 
         function basicWeather() {
+            $('#main-weather').css('visibility', 'visible')
             // converting Kelvin to F 
             $('#basic').empty();
             $('#img-div').empty();
@@ -126,15 +127,15 @@ function displayCurrentWeather() {
                     uvIndex.text(`${uvData.value}`);
                     // changing text color based on received data and charts
                     if (uvData.value <= 2) {
-                        uvIndex.addClass('low');
+                        uvIndexDiv.addClass('low');
                     } else if (uvData.value >= 3 && uvData.value < 6) {
-                        uvIndex.addClass('moderate');
+                        uvIndexDiv.addClass('moderate');
                     } else if (uvData.value >= 6 && uvData.value < 8) {
-                        uvIndex.addClass('high');
+                        uvIndexDiv.addClass('high');
                     } else if (uvData.value >= 8 && uvData.value < 10) {
-                        uvIndex.addClass('very-high');
+                        uvIndexDiv.addClass('very-high');
                     } else {
-                        uvIndex.addClass('extreme');
+                        uvIndexDiv.addClass('extreme');
                     }
                     // add to page 
                     uvIndexDiv.append(uvIndexIcon, uvIndexHead, uvIndex);
@@ -159,7 +160,7 @@ function displayCurrentWeather() {
                     for (i = 1; i < 6; i++) {
                         // creating the main div and time element 
                         var dayDiv = $('<div>').addClass('days')
-                        var dayDate = $('<h4>').text(moment().add(parseInt([i]), 'days').format('l'))
+                        var dayDate = $('<h4>').text(moment().add(parseInt([i]), 'days').format('M.D.YY'))
                         // creating the weather icon 
                         var iconurl = "https://s3-us-west-2.amazonaws.com/s.cdpn.io/162656/" + fiveDay.daily[i].weather[0].icon + ".svg";
                         var icon = $('<img>');
@@ -263,9 +264,6 @@ $(document).on('click', '.past-city', function(){
     cities.unshift(storedCity);
     clearCells();
     displayCurrentWeather();
-
-   
-
 });
 
 
