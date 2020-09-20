@@ -15,7 +15,7 @@ $('#btn').click(function (e) {
 
 function displayCurrentWeather() {
     var currentCity = cities[0];
-    var queryURL = `https://api.openweathermap.org/data/2.5/weather?q=${currentCity},US&appid=ece093d755e1ee215e90b7366ec41a32`
+    var queryURL = `https://api.openweathermap.org/data/2.5/weather?q=${currentCity}&appid=ece093d755e1ee215e90b7366ec41a32`
 
     $.ajax({
         url: queryURL,
