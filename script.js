@@ -21,7 +21,6 @@ function displayCurrentWeather() {
         url: queryURL,
         method: "GET"
     }).then(function (response) {
-        console.log(response)
         basicWeather()
         detailedWeather()
         displayFiveDayForcast()
@@ -153,7 +152,6 @@ function displayCurrentWeather() {
                 url: fiveDayURL,
                 method: "GET"
             }).then(function (fiveDay) {
-                console.log(fiveDay);
                 nextDayWeather();
 
                 function nextDayWeather() {
@@ -193,47 +191,30 @@ function displayCurrentWeather() {
 
 
                 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             });
 
         };
 
         function storeItems() {
-            console.log('stored')
             var temp = parseInt(response.main.temp)
             var tempF = Math.floor(((temp - 273.15) * 1.80) + 32)
             var pastCities = [{
-                city: $('#city').val().trim(),
-                icon: response.weather[0].icon,
+                city: response.name,
+                image: response.weather[0].icon,
                 temp: tempF
             }];
             Array.prototype.unshift.apply(storedCities, pastCities);
-            localStorage.setItem("cities", JSON.stringify(storedCities));
+
+            if(storedCities.length > 3){
+                storedCities.pop();
+                localStorage.setItem("cities", JSON.stringify(storedCities));
+            }else{
+                localStorage.setItem("cities", JSON.stringify(storedCities));
+            }
+            
+            $('#past-search').empty();
+            getFromLocal();
+            
         };
     });
 };
@@ -242,3 +223,51 @@ function clearCells() {
     $('#details').empty();
     $('#five-day').empty();
 };
+
+function getFromLocal(){
+    localStorageCities = JSON.parse(localStorage.getItem('cities'));
+    if (localStorageCities !== null) {
+        storedCities = localStorageCities;
+}
+      
+        for(i = 0; i < localStorageCities.length; i++){
+            pastCityDiv = $('<div>').addClass('past-city').attr('data-city',localStorageCities[i].city);
+
+            var iconurl = "https://s3-us-west-2.amazonaws.com/s.cdpn.io/162656/" + localStorageCities[i].image + ".svg";
+            var pastIcon = $('<img>');
+            pastIcon.attr('width', '30px');
+            pastIcon.attr('height', '30px');
+            pastIcon.attr('src', iconurl);
+            
+
+            var name = $('<h4>');
+            name.text(`${localStorageCities[i].city}`);
+
+            var temp = $('<p>');
+            temp.text(`${localStorageCities[i].temp}°`);
+
+            pastCityDiv.append(pastIcon, name, temp);
+
+            $('#past-search').append(pastCityDiv);
+
+
+        }
+
+
+
+
+}
+
+$(document).on('click', '.past-city', function(){
+    var storedCity = $(this).data('city');
+    cities.unshift(storedCity);
+    clearCells();
+    displayCurrentWeather();
+
+   
+
+});
+
+
+
+getFromLocal()
