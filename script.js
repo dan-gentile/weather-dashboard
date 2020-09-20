@@ -1,13 +1,15 @@
 // define global variables
 var cities = []
+var storedCities = []
 
 // click event on search button to add cities to array and start the get info process
 $('#btn').click(function (e) {
     e.preventDefault();
     var city = $('#city').val().trim();
     cities.unshift(city);
-
-    displayCurrentWeather()
+    // running functions
+    clearCells();
+    displayCurrentWeather();
 });
 
 
@@ -19,9 +21,15 @@ function displayCurrentWeather() {
         url: queryURL,
         method: "GET"
     }).then(function (response) {
+        console.log(response)
         basicWeather()
         detailedWeather()
-        console.log(response)
+        displayFiveDayForcast()
+
+        setTimeout(function () {
+            storeItems();
+        }, 10)
+
 
         function basicWeather() {
             // converting Kelvin to F 
@@ -52,7 +60,7 @@ function displayCurrentWeather() {
             // adding items to page
             $('#basic').append(weatherHeader, currentDate, currentTemp);
             $('#img-div').append(icon)
-        }
+        };
 
         function detailedWeather() {
             createHumidity();
@@ -60,18 +68,19 @@ function displayCurrentWeather() {
             createWindSpeed();
             createUVIndex();
 
-            function createHumidity(){
+            function createHumidity() {
                 // add Humidity value
                 var humidityDiv = $('<div>').addClass('w-details');
                 var humidityIcon = $('<i>').addClass('fas fa-humidity fa-lg');
                 var humidityHead = $('<h4>').text('Humidity');
                 var humidity = $('<p>');
                 humidity.text(`${response.main.humidity}%`);
+                // add to page
                 humidityDiv.append(humidityIcon, humidityHead, humidity);
-                $('#details').append(humidityDiv);  
-            }
-           
-            function createVisibility(){
+                $('#details').append(humidityDiv);
+            };
+
+            function createVisibility() {
                 // convert visibility from meters to miles
                 var visibilityMiles = Math.floor(response.visibility / 1609.344);
                 // add visibility value
@@ -80,12 +89,13 @@ function displayCurrentWeather() {
                 var visibilityHead = $('<h4>').text('Visibility');
                 var visibility = $('<p>');
                 visibility.text(`${visibilityMiles} mi`);
+                // add to page
                 visibilityDiv.append(visibilityIcon, visibilityHead, visibility);
-                $('#details').append(visibilityDiv);  
+                $('#details').append(visibilityDiv);
 
-            }
-          
-            function createWindSpeed(){
+            };
+
+            function createWindSpeed() {
                 // convert wind speed from meters/second to mph 
                 var windMPH = Math.floor(response.wind.speed / 0.44704);
                 // add Wind Speed value
@@ -94,16 +104,17 @@ function displayCurrentWeather() {
                 var windSpeedHead = $('<h4>').text('Wind Speed');
                 var windSpeed = $('<p>');
                 windSpeed.text(`${windMPH} mph`);
+                // add to page
                 windSpeedDiv.append(windSpeedIcon, windSpeedHead, windSpeed);
-                $('#details').append(windSpeedDiv);  
-            }
-            
-            function createUVIndex(){
+                $('#details').append(windSpeedDiv);
+            };
+
+            function createUVIndex() {
                 // getting the UV Index from the API
                 var lon = response.coord.lon;
                 var lat = response.coord.lat;
                 var uvURL = `http://api.openweathermap.org/data/2.5/uvi?appid=ece093d755e1ee215e90b7366ec41a32&lat=${lat}&lon=${lon}`;
-                
+
                 $.ajax({
                     url: uvURL,
                     method: "GET"
@@ -115,36 +126,119 @@ function displayCurrentWeather() {
                     var uvIndex = $('<p>');
                     uvIndex.text(`${uvData.value}`);
                     // changing text color based on received data and charts
-                    if(uvData.value <= 2){
+                    if (uvData.value <= 2) {
                         uvIndex.addClass('low');
-                    } else if (uvData.value >= 3 || uvData <= 5){
+                    } else if (uvData.value >= 3 && uvData.value < 6) {
                         uvIndex.addClass('moderate');
-                    } else if (uvData.value >= 6 || uvData <= 7){
+                    } else if (uvData.value >= 6 && uvData.value < 8) {
                         uvIndex.addClass('high');
-                    } else if (uvData.value >= 8 || uvData <= 10){
+                    } else if (uvData.value >= 8 && uvData.value < 10) {
                         uvIndex.addClass('very-high');
-                    } else{
+                    } else {
                         uvIndex.addClass('extreme');
                     }
-                    // adding to page 
+                    // add to page 
                     uvIndexDiv.append(uvIndexIcon, uvIndexHead, uvIndex);
-                    $('#details').append(uvIndexDiv);  
+                    $('#details').append(uvIndexDiv);
                 })
-            }
-            
+            };
+        };
 
-     
+        function displayFiveDayForcast() {
+            var lon = response.coord.lon;
+            var lat = response.coord.lat;
+            var fiveDayURL = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=current,minutely,hourly&appid=ece093d755e1ee215e90b7366ec41a32`
+
+            $.ajax({
+                url: fiveDayURL,
+                method: "GET"
+            }).then(function (fiveDay) {
+                console.log(fiveDay);
+                nextDayWeather();
+
+                function nextDayWeather() {
+                    // for loop for each day of the 5 day 
+                    for (i = 1; i < 6; i++) {
+                        // creating the main div and time element 
+                        var dayDiv = $('<div>').addClass('days')
+                        var dayDate = $('<h4>').text(moment().add(parseInt([i]), 'days').format('l'))
+                        // creating the weather icon 
+                        var iconurl = "https://s3-us-west-2.amazonaws.com/s.cdpn.io/162656/" + fiveDay.daily[i].weather[0].icon + ".svg";
+                        var icon = $('<img>');
+                        icon.attr('width', '40px')
+                        icon.attr('height', '40px')
+                        icon.attr('src', iconurl);
+                        // creating the high temp container
+                        var dayTemp = $('<div>').addClass('label');
+                        var highTempIcon = $('<i>').addClass('fas fa-thermometer-three-quarters fa-lg');
+                        // calculating the high temp 
+                        var temp = parseInt(fiveDay.daily[i].temp.max);
+                        var tempF = Math.floor(((temp - 273.15) * 1.80) + 32);
+                        var highTempValue = $('<p>');
+                        highTempValue.text(`${tempF}°`);
+                        // adding icon and value to high temp container
+                        dayTemp.append(highTempIcon, highTempValue);
+                        // creating humidity container + value
+                        var dayHumidity = $('<div>').addClass('label');
+                        var dayHumidityIcon = $('<i>').addClass('fas fa-humidity fa-lg');
+                        var dayHumidityValue = $('<p>');
+                        dayHumidityValue.text(`${fiveDay.daily[i].humidity}%`);
+                        // adding icon and value to humidity container
+                        dayHumidity.append(dayHumidityIcon, dayHumidityValue);
+                        // adding date, weather icon, high temp, and humidity to main container
+                        dayDiv.append(dayDate, icon, dayTemp, dayHumidity);
+                        // adding all of them to the page
+                        $('#five-day').append(dayDiv);
+                    }
 
 
-        }
+                }
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            });
+
+        };
+
+        function storeItems() {
+            console.log('stored')
+            var temp = parseInt(response.main.temp)
+            var tempF = Math.floor(((temp - 273.15) * 1.80) + 32)
+            var pastCities = [{
+                city: $('#city').val().trim(),
+                icon: response.weather[0].icon,
+                temp: tempF
+            }];
+            Array.prototype.unshift.apply(storedCities, pastCities);
+            localStorage.setItem("cities", JSON.stringify(storedCities));
+        };
     });
+};
 
-
-
-
-}
-
+function clearCells() {
+    $('#details').empty();
+    $('#five-day').empty();
+};
