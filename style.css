@@ -196,6 +196,37 @@ main {
     justify-content: space-evenly;
     align-items: center;
     color: #000000;
+}
 
 
+/* Modal Styling */
+.popup-overlay {
+    visibility: hidden;
+    grid-column-start: 1;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    background: #ffffff;
+    border: 2px solid #666666;
+    border-radius: 20px;
+    width: 20%;
+    height: 20%;
+    left: 40%;
+}
+
+.popup-content {
+    visibility: hidden;
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+    padding: auto;
+    align-items: center;
+}
+
+.popup-overlay.active {
+    visibility: visible;
+}
+
+.popup-content.active {
+    visibility: visible;
 }
