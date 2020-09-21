@@ -17,7 +17,7 @@ $('#btn').click(function (e) {
 // Receives data from the Open Weather API and displays on screen
 function displayCurrentWeather() {
     var currentCity = cities[0];
-    var queryURL = `https://api.openweathermap.org/data/2.5/weather?q=${currentCity},US&appid=${apiKey}`;
+    var queryURL = `https://api.openweathermap.org/data/2.5/weather?q=${currentCity}&appid=${apiKey}`;
 
     $.ajax({
         url: queryURL,
@@ -36,6 +36,7 @@ function displayCurrentWeather() {
 
         },
         success: function (response) {
+            console.log(response)
             basicWeather();
             detailedWeather();
             displayFiveDayForecast();
@@ -62,7 +63,7 @@ function displayCurrentWeather() {
 
                 // creating city name 
                 var weatherHeader = $('<div>').attr('id', 'weather-city');
-                weatherHeader.html(`Current Weather ${response.name}`);
+                weatherHeader.html(`Current Weather: ${response.name}, ${response.sys.country}`);
 
                 // creating date
                 var currentDate = $('<div>').attr('id', 'current-date');
@@ -220,7 +221,7 @@ function displayCurrentWeather() {
                     city: response.name,
                     image: response.weather[0].icon,
                     temp: tempF,
-                    id: response.id
+                    country: response.sys.country
 
                 }];
                 Array.prototype.unshift.apply(storedCities, pastCities);
@@ -263,7 +264,7 @@ function getFromLocal() {
 
 
             var name = $('<h4>');
-            name.text(`${localStorageCities[i].city}`);
+            name.text(`${localStorageCities[i].city}, ${localStorageCities[i].country}`);
 
             var temp = $('<p>');
             temp.text(`${localStorageCities[i].temp}°`);
