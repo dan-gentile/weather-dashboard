@@ -130,7 +130,7 @@ function displayCurrentWeather() {
                     // getting the UV Index from the API
                     var lon = response.coord.lon;
                     var lat = response.coord.lat;
-                    var uvURL = `http://api.openweathermap.org/data/2.5/uvi?appid=ece093d755e1ee215e90b7366ec41a32&lat=${lat}&lon=${lon}&appid=${apiKey}`;
+                    var uvURL = `https://api.openweathermap.org/data/2.5/uvi?appid=ece093d755e1ee215e90b7366ec41a32&lat=${lat}&lon=${lon}&appid=${apiKey}`;
 
                     $.ajax({
                         url: uvURL,
