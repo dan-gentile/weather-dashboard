@@ -36,7 +36,6 @@ function displayCurrentWeather() {
 
         },
         success: function (response) {
-            console.log(response)
             basicWeather();
             detailedWeather();
             displayFiveDayForecast();
