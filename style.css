@@ -196,6 +196,7 @@ main {
     justify-content: space-evenly;
     align-items: center;
     color: #000000;
+    cursor: pointer;
 }
 
 
