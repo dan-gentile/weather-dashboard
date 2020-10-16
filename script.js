@@ -1,10 +1,10 @@
 // define global variables
-var cities = [];
-var storedCities = [];
-var apiKey = 'ece093d755e1ee215e90b7366ec41a32';
+const cities = [];
+const storedCities = [];
+const apiKey = 'ece093d755e1ee215e90b7366ec41a32';
 
 // click event on search button to add cities to array and start the get info process
-$('#btn').click(function (e) {
+$('#btn').click(function(e) {
     e.preventDefault();
     // taking the data, removing any spaces around the comma and splitting into multiple strings at the comma
     var city = $('#city').val().replace(/\s*,\s*/g, ",").split(',');
@@ -22,7 +22,7 @@ function displayCurrentWeather() {
     $.ajax({
         url: queryURL,
         method: "GET",
-        error: function () {
+        error: function() {
             // remove page content
             $('#basic').empty();
             $('#img-div').empty();
@@ -30,24 +30,24 @@ function displayCurrentWeather() {
             // show error message
             $('.popup-overlay, .popup-content').addClass('active');
             // close error message
-            $(".close, .popup-overlay").on("click", function () {
+            $(".close, .popup-overlay").on("click", function() {
                 $(".popup-overlay, .popup-content").removeClass("active");
             });
 
         },
-        success: function (response) {
+        success: function(response) {
             basicWeather();
             detailedWeather();
             displayFiveDayForecast();
             // allowing for the data to be received before storing
-            setTimeout(function () {
+            setTimeout(function() {
                 storeItems();
             }, 10)
 
             // basic = current city, temp and weather icon 
             function basicWeather() {
                 $('#main-weather').css('visibility', 'visible')
-                // converting Kelvin to F 
+                    // converting Kelvin to F 
                 $('#basic').empty();
                 $('#img-div').empty();
                 var temp = parseInt(response.main.temp)
@@ -134,7 +134,7 @@ function displayCurrentWeather() {
                     $.ajax({
                         url: uvURL,
                         method: "GET"
-                    }).then(function (uvData) {
+                    }).then(function(uvData) {
                         // creating elements
                         var uvIndexDiv = $('<div>').addClass('w-details');
                         var uvIndexIcon = $('<i>').addClass('fas fa-sun fa-lg');
@@ -168,7 +168,7 @@ function displayCurrentWeather() {
                 $.ajax({
                     url: fiveDayURL,
                     method: "GET"
-                }).then(function (fiveDay) {
+                }).then(function(fiveDay) {
                     nextDayWeather();
 
                     function nextDayWeather() {
@@ -255,17 +255,17 @@ function getFromLocal() {
         for (i = 0; i < localStorageCities.length; i++) {
             pastCityDiv = $('<div>').addClass('past-city').attr('data-city', localStorageCities[i].city);
 
-            var iconurl = "https://s3-us-west-2.amazonaws.com/s.cdpn.io/162656/" + localStorageCities[i].image + ".svg";
-            var pastIcon = $('<img>');
+            let iconurl = "https://s3-us-west-2.amazonaws.com/s.cdpn.io/162656/" + localStorageCities[i].image + ".svg";
+            const pastIcon = $('<img>');
             pastIcon.attr('width', '30px');
             pastIcon.attr('height', '30px');
             pastIcon.attr('src', iconurl);
 
 
-            var name = $('<h4>');
+            const name = $('<h4>');
             name.text(`${localStorageCities[i].city}, ${localStorageCities[i].country}`);
 
-            var temp = $('<p>');
+            const temp = $('<p>');
             temp.text(`${localStorageCities[i].temp}°`);
 
             pastCityDiv.append(pastIcon, name, temp);
@@ -281,8 +281,8 @@ function getFromLocal() {
 };
 
 // pulls the city from stored data and pushes it to the page
-$(document).on('click', '.past-city', function () {
-    var storedCity = $(this).data('city');
+$(document).on('click', '.past-city', function() {
+    let storedCity = $(this).data('city');
     cities.unshift(storedCity);
     clearCells();
     displayCurrentWeather();

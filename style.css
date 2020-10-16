@@ -2,7 +2,6 @@
     margin: 0;
     font-family: 'Roboto', sans-serif;
     font-size: 1rem;
-
 }
 
 header {
@@ -27,7 +26,6 @@ button {
     border-width: 0;
     margin: 0 5px 0 5px;
     background-color: #a35ce0;
-
 }
 
 input {
@@ -51,7 +49,6 @@ input {
     grid-template-columns: repeat(3, minmax(120px, 1fr));
     height: 40px;
     background-color: #d0aaf0;
-
 }
 
 main {
@@ -59,7 +56,6 @@ main {
     grid-template-columns: 1fr minmax(360px, 60vw) 1fr;
     grid-template-rows: 475px 250px 100px;
     background-color: #f9f9f9;
-
 }
 
 #main-weather {
@@ -72,6 +68,7 @@ main {
     border-width: 1px;
     border-radius: 20px;
     background-color: #ffffff;
+    box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.4);
 }
 
 #basic {
@@ -98,12 +95,10 @@ main {
     grid-column-start: 1;
     grid-column-end: span 2;
     grid-row-start: 2;
-
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 75px 75px;
     padding: 10px 0 10px 0;
-
 }
 
 .w-details {
@@ -117,7 +112,6 @@ main {
 #five-day {
     grid-column-start: 2;
     grid-row-start: 2;
-
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(72.5px, 12vw));
 }
@@ -132,6 +126,7 @@ main {
     border-width: 1px;
     border-radius: 20px;
     background-color: #ffffff;
+    box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.4);
 }
 
 .label {
@@ -139,7 +134,6 @@ main {
     justify-content: space-evenly;
     align-items: center;
     width: 72.5px;
-
 }
 
 #img-div {
@@ -148,49 +142,32 @@ main {
     align-items: center;
 }
 
+
 /* Colors for UV index */
+
 .low {
-    background: repeating-linear-gradient(45deg,
-            #008000,
-            #008000 10px,
-            #ffffff 10px,
-            #ffffff 20px);
+    background: repeating-linear-gradient(45deg, #008000, #008000 10px, #ffffff 10px, #ffffff 20px);
 }
 
 .moderate {
-    background: repeating-linear-gradient(45deg,
-            #ffff00,
-            #ffff00 10px,
-            #ffffff 10px,
-            #ffffff 20px);
-
+    background: repeating-linear-gradient(45deg, #ffff00, #ffff00 10px, #ffffff 10px, #ffffff 20px);
 }
 
 .high {
-    background: repeating-linear-gradient(45deg,
-            #ffa500,
-            #ffa500 10px,
-            #ffffff 10px,
-            #ffffff 20px);
+    background: repeating-linear-gradient(45deg, #ffa500, #ffa500 10px, #ffffff 10px, #ffffff 20px);
 }
 
 .very-high {
-    background: repeating-linear-gradient(45deg,
-            #ff0000,
-            #ff0000 10px,
-            #ffffff 10px,
-            #ffffff 20px);
+    background: repeating-linear-gradient(45deg, #ff0000, #ff0000 10px, #ffffff 10px, #ffffff 20px);
 }
 
 .extreme {
-    background: repeating-linear-gradient(45deg,
-            #800080,
-            #800080 10px,
-            #ffffff 10px,
-            #ffffff 20px);
+    background: repeating-linear-gradient(45deg, #800080, #800080 10px, #ffffff 10px, #ffffff 20px);
 }
 
+
 /* Past Cities */
+
 .past-city {
     display: flex;
     justify-content: space-evenly;
@@ -201,6 +178,7 @@ main {
 
 
 /* Modal Styling */
+
 .popup-overlay {
     visibility: hidden;
     grid-column-start: 1;
