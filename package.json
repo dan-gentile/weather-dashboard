@@ -1,0 +1,24 @@
+{
+  "name": "weather-dashboard",
+  "version": "1.0.0",
+  "description": "![Contents](https://img.shields.io/github/languages/top/dan-gentile/weather-dashboard) ![Last-Commit](https://img.shields.io/github/last-commit/dan-gentile/weather-dashboard)",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dan-gentile/weather-dashboard.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dan-gentile/weather-dashboard/issues"
+  },
+  "homepage": "https://github.com/dan-gentile/weather-dashboard#readme",
+  "dependencies": {
+    "@types/jquery": "^3.5.3",
+    "moment": "^2.29.1"
+  }
+}

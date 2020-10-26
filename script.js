@@ -1,23 +1,29 @@
 // define global variables
+
 const cities = [];
-const storedCities = [];
+let storedCities = [];
 const apiKey = 'ece093d755e1ee215e90b7366ec41a32';
 
+
 // click event on search button to add cities to array and start the get info process
-$('#btn').click(function(e) {
+$('#btn').on("click", function(e) {
     e.preventDefault();
     // taking the data, removing any spaces around the comma and splitting into multiple strings at the comma
-    var city = $('#city').val().replace(/\s*,\s*/g, ",").split(',');
-    cities.unshift(city);
-    // running functions
-    clearCells();
-    displayCurrentWeather();
+    if (typeof $('#city').val() === 'string') {
+        const city = $('#city').val().replace(/\s*,\s*/g, ",").split(',');
+        cities.unshift(city);
+        // running functions
+        clearCells();
+        displayCurrentWeather();
+    } else {
+        alert("Incorrect Value")
+    }
 });
 
 // Receives data from the Open Weather API and displays on screen
 function displayCurrentWeather() {
-    var currentCity = cities[0];
-    var queryURL = `https://api.openweathermap.org/data/2.5/weather?q=${currentCity}&appid=${apiKey}`;
+    let currentCity = cities[0];
+    let queryURL = `https://api.openweathermap.org/data/2.5/weather?q=${currentCity}&appid=${apiKey}`;
 
     $.ajax({
         url: queryURL,
@@ -50,26 +56,26 @@ function displayCurrentWeather() {
                     // converting Kelvin to F 
                 $('#basic').empty();
                 $('#img-div').empty();
-                var temp = parseInt(response.main.temp)
-                var tempF = Math.floor(((temp - 273.15) * 1.80) + 32)
+                const temp = parseInt(response.main.temp)
+                const tempF = Math.floor(((temp - 273.15) * 1.80) + 32)
 
                 // creating icon 
-                var iconurl = "https://s3-us-west-2.amazonaws.com/s.cdpn.io/162656/" + response.weather[0].icon + ".svg";
-                var icon = $('<img>');
+                const iconUrl = `https://s3-us-west-2.amazonaws.com/s.cdpn.io/162656/${response.weather[0].icon}.svg`;
+                const icon = $('<img>');
                 icon.attr('width', '160px')
                 icon.attr('height', '160px')
-                icon.attr('src', iconurl);
+                icon.attr('src', iconUrl);
 
                 // creating city name 
-                var weatherHeader = $('<div>').attr('id', 'weather-city');
+                const weatherHeader = $('<div>').attr('id', 'weather-city');
                 weatherHeader.html(`Current Weather: ${response.name}, ${response.sys.country}`);
 
                 // creating date
-                var currentDate = $('<div>').attr('id', 'current-date');
+                const currentDate = $('<div>').attr('id', 'current-date');
                 currentDate.html(moment().format('MMMM Do YYYY'));
 
                 // creating current temp
-                var currentTemp = $('<div>').attr('id', 'current-temp');
+                const currentTemp = $('<div>').attr('id', 'current-temp');
                 currentTemp.html(`${tempF} &#176`);
 
                 // adding items to page
@@ -86,10 +92,10 @@ function displayCurrentWeather() {
 
                 function createHumidity() {
                     // add Humidity value
-                    var humidityDiv = $('<div>').addClass('w-details');
-                    var humidityIcon = $('<i>').addClass('fas fa-humidity fa-lg');
-                    var humidityHead = $('<h4>').text('Humidity');
-                    var humidity = $('<p>');
+                    const humidityDiv = $('<div>').addClass('w-details');
+                    const humidityIcon = $('<i>').addClass('fas fa-humidity fa-lg');
+                    const humidityHead = $('<h4>').text('Humidity');
+                    const humidity = $('<p>');
                     humidity.text(`${response.main.humidity}%`);
                     // add to page
                     humidityDiv.append(humidityIcon, humidityHead, humidity);
@@ -98,12 +104,12 @@ function displayCurrentWeather() {
 
                 function createVisibility() {
                     // convert visibility from meters to miles
-                    var visibilityMiles = Math.floor(response.visibility / 1609.344);
+                    const visibilityMiles = Math.floor(response.visibility / 1609.344);
                     // add visibility value
-                    var visibilityDiv = $('<div>').addClass('w-details');
-                    var visibilityIcon = $('<i>').addClass('fas fa-eye-slash fa-lg');
-                    var visibilityHead = $('<h4>').text('Visibility');
-                    var visibility = $('<p>');
+                    const visibilityDiv = $('<div>').addClass('w-details');
+                    const visibilityIcon = $('<i>').addClass('fas fa-eye-slash fa-lg');
+                    const visibilityHead = $('<h4>').text('Visibility');
+                    const visibility = $('<p>');
                     visibility.text(`${visibilityMiles} mi`);
                     // add to page
                     visibilityDiv.append(visibilityIcon, visibilityHead, visibility);
@@ -113,12 +119,12 @@ function displayCurrentWeather() {
 
                 function createWindSpeed() {
                     // convert wind speed from meters/second to mph 
-                    var windMPH = Math.floor(response.wind.speed / 0.44704);
+                    const windMPH = Math.floor(response.wind.speed / 0.44704);
                     // add Wind Speed value
-                    var windSpeedDiv = $('<div>').addClass('w-details');
-                    var windSpeedIcon = $('<i>').addClass('fas fa-wind fa-lg');
-                    var windSpeedHead = $('<h4>').text('Wind Speed');
-                    var windSpeed = $('<p>');
+                    const windSpeedDiv = $('<div>').addClass('w-details');
+                    const windSpeedIcon = $('<i>').addClass('fas fa-wind fa-lg');
+                    const windSpeedHead = $('<h4>').text('Wind Speed');
+                    const windSpeed = $('<p>');
                     windSpeed.text(`${windMPH} mph`);
                     // add to page
                     windSpeedDiv.append(windSpeedIcon, windSpeedHead, windSpeed);
@@ -127,19 +133,19 @@ function displayCurrentWeather() {
 
                 function createUVIndex() {
                     // getting the UV Index from the API
-                    var lon = response.coord.lon;
-                    var lat = response.coord.lat;
-                    var uvURL = `https://api.openweathermap.org/data/2.5/uvi?appid=ece093d755e1ee215e90b7366ec41a32&lat=${lat}&lon=${lon}&appid=${apiKey}`;
+                    let lon = response.coord.lon;
+                    let lat = response.coord.lat;
+                    let uvURL = `https://api.openweathermap.org/data/2.5/uvi?appid=ece093d755e1ee215e90b7366ec41a32&lat=${lat}&lon=${lon}&appid=${apiKey}`;
 
                     $.ajax({
                         url: uvURL,
                         method: "GET"
                     }).then(function(uvData) {
                         // creating elements
-                        var uvIndexDiv = $('<div>').addClass('w-details');
-                        var uvIndexIcon = $('<i>').addClass('fas fa-sun fa-lg');
-                        var uvIndexHead = $('<h4>').text('UV Index');
-                        var uvIndex = $('<p>');
+                        const uvIndexDiv = $('<div>').addClass('w-details');
+                        const uvIndexIcon = $('<i>').addClass('fas fa-sun fa-lg');
+                        const uvIndexHead = $('<h4>').text('UV Index');
+                        const uvIndex = $('<p>');
                         uvIndex.text(`${uvData.value}`);
                         // changing text color based on received data and charts
                         if (uvData.value <= 2) {
@@ -161,9 +167,9 @@ function displayCurrentWeather() {
             };
             // five = five day forecast including date, high temp, weather icon and humidity 
             function displayFiveDayForecast() {
-                var lon = response.coord.lon;
-                var lat = response.coord.lat;
-                var fiveDayURL = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=current,minutely,hourly&appid=${apiKey}`;
+                let lon = response.coord.lon;
+                let lat = response.coord.lat;
+                let fiveDayURL = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=current,minutely,hourly&appid=${apiKey}`;
 
                 $.ajax({
                     url: fiveDayURL,
@@ -173,30 +179,30 @@ function displayCurrentWeather() {
 
                     function nextDayWeather() {
                         // for loop for each day of the 5 day 
-                        for (i = 1; i < 6; i++) {
+                        for (let i = 1; i < 6; i++) {
                             // creating the main div and time element 
-                            var dayDiv = $('<div>').addClass('days');
-                            var dayDate = $('<h4>').text(moment().add(parseInt([i]), 'days').format('M.D.YY'));
+                            const dayDiv = $('<div>').addClass('days');
+                            const dayDate = $('<h4>').text(moment().add(i, 'days').format('M.D.YY'));
                             // creating the weather icon 
-                            var iconurl = "https://s3-us-west-2.amazonaws.com/s.cdpn.io/162656/" + fiveDay.daily[i].weather[0].icon + ".svg";
-                            var icon = $('<img>');
+                            const iconUrl = `https://s3-us-west-2.amazonaws.com/s.cdpn.io/162656/${fiveDay.daily[i].weather[0].icon}.svg`;
+                            const icon = $('<img>');
                             icon.attr('width', '40px');
                             icon.attr('height', '40px');
-                            icon.attr('src', iconurl);
+                            icon.attr('src', iconUrl);
                             // creating the high temp container
-                            var dayTemp = $('<div>').addClass('label');
-                            var highTempIcon = $('<i>').addClass('fas fa-thermometer-three-quarters fa-lg');
+                            const dayTemp = $('<div>').addClass('label');
+                            const highTempIcon = $('<i>').addClass('fas fa-thermometer-three-quarters fa-lg');
                             // calculating the high temp 
-                            var temp = parseInt(fiveDay.daily[i].temp.max);
-                            var tempF = Math.floor(((temp - 273.15) * 1.80) + 32);
-                            var highTempValue = $('<p>');
+                            const temp = parseInt(fiveDay.daily[i].temp.max);
+                            const tempF = Math.floor(((temp - 273.15) * 1.80) + 32);
+                            const highTempValue = $('<p>');
                             highTempValue.text(`${tempF}°`);
                             // adding icon and value to high temp container
                             dayTemp.append(highTempIcon, highTempValue);
                             // creating humidity container + value
-                            var dayHumidity = $('<div>').addClass('label');
-                            var dayHumidityIcon = $('<i>').addClass('fas fa-humidity fa-lg');
-                            var dayHumidityValue = $('<p>');
+                            const dayHumidity = $('<div>').addClass('label');
+                            const dayHumidityIcon = $('<i>').addClass('fas fa-humidity fa-lg');
+                            const dayHumidityValue = $('<p>');
                             dayHumidityValue.text(`${fiveDay.daily[i].humidity}%`);
                             // adding icon and value to humidity container
                             dayHumidity.append(dayHumidityIcon, dayHumidityValue);
@@ -214,9 +220,9 @@ function displayCurrentWeather() {
 
             // storing the weather data 
             function storeItems() {
-                var temp = parseInt(response.main.temp);
-                var tempF = Math.floor(((temp - 273.15) * 1.80) + 32);
-                var pastCities = [{
+                const temp = parseInt(response.main.temp);
+                const tempF = Math.floor(((temp - 273.15) * 1.80) + 32);
+                const pastCities = [{
                     city: response.name,
                     image: response.weather[0].icon,
                     temp: tempF,
@@ -248,18 +254,18 @@ function clearCells() {
 
 // receives items from local storage and adds them to the past cities bar
 function getFromLocal() {
-    localStorageCities = JSON.parse(localStorage.getItem('cities'));
+    let localStorageCities = JSON.parse(localStorage.getItem('cities'));
     if (localStorageCities !== null) {
         storedCities = localStorageCities;
 
-        for (i = 0; i < localStorageCities.length; i++) {
-            pastCityDiv = $('<div>').addClass('past-city').attr('data-city', localStorageCities[i].city);
+        for (let i = 0; i < localStorageCities.length; i++) {
+            const pastCityDiv = $('<div>').addClass('past-city').attr('data-city', localStorageCities[i].city);
 
-            let iconurl = "https://s3-us-west-2.amazonaws.com/s.cdpn.io/162656/" + localStorageCities[i].image + ".svg";
+            let iconUrl = `https://s3-us-west-2.amazonaws.com/s.cdpn.io/162656/${localStorageCities[i].image}.svg`;
             const pastIcon = $('<img>');
             pastIcon.attr('width', '30px');
             pastIcon.attr('height', '30px');
-            pastIcon.attr('src', iconurl);
+            pastIcon.attr('src', iconUrl);
 
 
             const name = $('<h4>');
